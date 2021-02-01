@@ -26,7 +26,7 @@ platform :ios do
     min_version = get_min_version
     sh("rm -rf " + root_path + artifacts_directory)
     sh("mkdir " + root_path + artifacts_directory)
-    download_dsyms(version: min_version, output_directory: artifacts_directory)
+    download_dsyms(min_version: min_version, output_directory: artifacts_directory)
     # download_dsyms(version: "1.0.0", output_directory: artifacts_directory)
     # download_dsyms(after_uploaded_date: "2021-02-01T21:02:01+01:00", output_directory: artifacts_directory)
     sh("sh -x " + root_path + upload_script + " " + root_path + artifacts_directory)
