@@ -38,12 +38,12 @@ platform :ios do
   end
 
   private_lane :get_download_options do
-    if ENV["ci"] == 1 then
+    if ENV["CI"] == 1 then
       key = get_info_plist_value(path: options_plist_path, key: "ci_key")
       {
-        version: ENV[key + "_version"],
-        min_version: ENV[key + "_min_version"],
-        after_uploaded_date: ENV[key + "_after_uploaded_date"]
+        version: ENV[key + "_VERSION"],
+        min_version: ENV[key + "_MIN_VERSION"],
+        after_uploaded_date: ENV[key + "_AFTER_UPLOAD_DATE"]
       }
     else 
       {
