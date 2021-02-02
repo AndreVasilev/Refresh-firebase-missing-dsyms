@@ -19,18 +19,59 @@ platform :ios do
 
   root_path = "../"
   artifacts_directory = "artifacts"
+  artifacts_path = root_path + artifacts_directory
   upload_script = "upload-dsyms.sh"
-  min_version_filepath = "../min_version.txt"
+  min_version_filepath = root_path + "min_version.txt"
+  options_plist_path = "options.plist"
 
   lane :refresh_dsyms do
-    min_version = get_min_version
-    sh("rm -rf " + root_path + artifacts_directory)
-    sh("mkdir " + root_path + artifacts_directory)
-    download_dsyms(min_version: min_version, output_directory: artifacts_directory)
-    # download_dsyms(version: "1.0.0", output_directory: artifacts_directory)
-    # download_dsyms(after_uploaded_date: "2021-02-01T21:02:01+01:00", output_directory: artifacts_directory)
-    sh("sh -x " + root_path + upload_script + " " + root_path + artifacts_directory)
+    clean_artifacts_directory
+    options = get_download_options
+    download_artifacts(options: options)
+    sh_upload_dsyms
     clean_build_artifacts
+  end
+
+  private_lane :clean_artifacts_directory do
+    sh("rm -rf " + artifacts_path)
+    sh("mkdir " + artifacts_path)
+  end
+
+  private_lane :get_download_options do
+    if ENV["ci"] == 1 then
+      key = get_info_plist_value(path: options_plist_path, key: "ci_key")
+      {
+        version: ENV[key + "_version"],
+        min_version: ENV[key + "_min_version"],
+        after_uploaded_date: ENV[key + "_after_uploaded_date"]
+      }
+    else 
+      {
+        version: get_info_plist_value(path: options_plist_path, key: "version"),
+        min_version: get_info_plist_value(path: options_plist_path, key: "min_version"),
+        after_uploaded_date: get_info_plist_value(path: options_plist_path, key: "after_uploaded_date")
+      }
+    end
+  end
+
+  private_lane :download_artifacts do |parameters|
+    options = parameters[:options]
+    version = options[:version]
+    min_version = options[:min_version]
+    after_uploaded_date = options[:after_uploaded_date]
+    if !version.nil? then 
+      download_dsyms(version: version, output_directory: artifacts_directory)
+    elsif !min_version.nil? then 
+      download_dsyms(min_version: min_version, output_directory: artifacts_directory)
+    elsif !after_uploaded_date.nil? then 
+      download_dsyms(after_uploaded_date: after_uploaded_date, output_directory: artifacts_directory)
+    else
+      download_dsyms(output_directory: artifacts_directory)
+    end
+  end
+
+  private_lane :sh_upload_dsyms do
+    sh("sh -x " + root_path + upload_script + " " + artifacts_path)
   end
 
   private_lane :get_min_version do
