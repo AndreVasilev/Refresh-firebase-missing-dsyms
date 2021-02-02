@@ -28,8 +28,8 @@ platform :ios do
     clean_artifacts_directory
     options = get_download_options
     download_artifacts(options: options)
-    # sh_upload_dsyms
-    # clean_build_artifacts
+    sh_upload_dsyms
+    clean_build_artifacts
   end
 
   private_lane :clean_artifacts_directory do
@@ -63,17 +63,13 @@ platform :ios do
     min_version = options[:min_version]
     after_uploaded_date = options[:after_uploaded_date]
     if !version.nil? then 
-      # download_dsyms(version: version, output_directory: artifacts_directory)
-      puts("version " + version)
+      download_dsyms(version: version, output_directory: artifacts_directory)
     elsif !min_version.nil? then 
-      # download_dsyms(min_version: min_version, output_directory: artifacts_directory)
-      puts("min_version " + min_version)
+      download_dsyms(min_version: min_version, output_directory: artifacts_directory)
     elsif !after_uploaded_date.nil? then 
-      # download_dsyms(after_uploaded_date: after_uploaded_date, output_directory: artifacts_directory)
-      puts("after_uploaded_date " + after_uploaded_date)
+      download_dsyms(after_uploaded_date: after_uploaded_date, output_directory: artifacts_directory)
     else
-      # download_dsyms(output_directory: artifacts_directory)
-      puts("all ")
+      download_dsyms(output_directory: artifacts_directory)
     end
   end
 
