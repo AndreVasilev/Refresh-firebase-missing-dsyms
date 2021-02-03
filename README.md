@@ -1,4 +1,4 @@
-# Refresh Firebase missing dSYMs
+# Upload missing dSYMs to Firebase Crashlytics
 
 Crashlytics [requires](https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=ios#expandable-1 "requires") you to upload new generated dSYMs by Apple for every crash record if dSYMs are missing. It is very annoying. These scripts can help you automate this process
 
