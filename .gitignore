@@ -1,5 +1,5 @@
 Credentials/*
-!Credentials/Example/*
+!Credentials/Example/
 Source/Gemfile.lock
 Source/fastlane/report.xml
 Source/fastlane/README.md
