@@ -26,7 +26,7 @@ for project in $credentials_directory/*; do
     rm -f "$exec_directory/$options_plist"
     cp "$project/$options_plist" "$exec_directory/$options_plist"
     
-    bundle exec fastlane refresh_dsyms
+    fastlane refresh_dsyms
     
     #Clear credentials
     rm -f "$exec_directory/$appfile_path"
